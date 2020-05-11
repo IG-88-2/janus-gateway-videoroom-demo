@@ -5,11 +5,11 @@ import { Component } from 'react';
 import { Provider, connect } from 'react-redux';
 import { createStore } from 'redux';
 import { Subscription, merge, Observable } from 'rxjs';
-import { JanusClient } from '../janus-gateway-client/lib/janus-gateway-client';
+import { JanusClient } from './janus-gateway-client/lib/janus-gateway-client';
 import { CreateSessionResponse } from './types';
 import { attachMediaStream } from './utils/attachMediaStream';
 import { v1 as uuidv1 } from 'uuid';
-import JanusSubscriber from '../janus-gateway-client/lib/subscriber';
+import JanusSubscriber from './janus-gateway-client/lib/subscriber';
 
 
 

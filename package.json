@@ -1,10 +1,9 @@
 {
-  "name": "janus-app",
-  "productName": "janus-app",
+  "name": "janus-gateway-videoroom-demo",
+  "productName": "janus-gateway-videoroom-demo",
   "version": "0.0.0",
-  "description": "janus client",
+  "description": "janus-gateway-videoroom-demo",
   "author": "Anatoly Strashkevich",
-  "homepage": "https://google.com",
   "copyright": "Copyright © 2020 Janus",
   "private": true,
   "main": "./production/main.js",
