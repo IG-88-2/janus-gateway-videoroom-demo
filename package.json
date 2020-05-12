@@ -10,7 +10,8 @@
   "repository": "",
   "scripts": {
     "production": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js --env production --config webpack.config.js",
-    "development": "node --max_old_space_size=4096 ./node_modules/.bin/webpack-dev-server -w --env development --config webpack.config.js",
+    "development:server": "node --max_old_space_size=4096 ./node_modules/.bin/webpack-dev-server -w --env development --config webpack.config.js",
+    "development": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js -w --env development --config webpack.config.js",
     "tests": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js -w --config webpack.config.tests.js"
   },
   "devDependencies": {

@@ -399,5 +399,5 @@ const host = `127.0.0.1`; //params.get(`host`);
 const port = `8080`; //params.get(`port`);
 
 const server = `ws://${host}:${port}/?id=${user_id}`;
-		
+
 ReactDOM.render(<VideoRoom server={server} />, app);
