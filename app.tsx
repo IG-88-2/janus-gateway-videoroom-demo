@@ -108,6 +108,10 @@ const onSubscriber = async (subscriber:JanusSubscriber) => {
 
 const connect = (client, server) => {
 
+	if (client.current) {
+		return client.current.getRooms().then(({ load }) => load);
+	}
+
 	client.current = new JanusClient({
 		server,
 		onPublisher: (publisher:JanusPublisher) => {
@@ -146,6 +150,7 @@ const disconnect = (client) => {
 			video.remove();
 		}
 		client.current.terminate();
+		client.current = null;
 	}
 
 };
@@ -265,6 +270,8 @@ const VideoRoom = ({ server }) => {
 
 						connect(client, server)
 						.then((rooms) => {
+
+							console.log('rooms', rooms);
 
 							setRooms(rooms);
 
