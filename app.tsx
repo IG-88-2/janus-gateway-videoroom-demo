@@ -3,15 +3,69 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { useState, useEffect, useRef } from 'react';
 import { v1 as uuidv1 } from 'uuid';
+import { Consola, BrowserReporter } from 'consola';
 import JanusClient from './janus-gateway-client/lib/janus-gateway-client';
 import JanusSubscriber from './janus-gateway-client/lib/subscriber';
 import JanusPublisher from './janus-gateway-client/lib/publisher';
+const moment = require('moment');
+
+
+
+const getDatePrefix = () => {
+
+    const date = moment().format('H:mm:ss:SSS');
+
+    return date;
+
+};
+
+
+
+const logger : any = new Consola({
+    level: 3,
+    reporters: [
+      new BrowserReporter()
+    ]
+});
+
+
+
+const log = {
+    success: (...args) => {
+        
+        logger.success(getDatePrefix(), ...args);
+
+    },
+    info: (...args) => {
+        
+        logger.info(getDatePrefix(), ...args);
+        
+    },
+    error: (error:any) => {
+        
+        logger.error(error);
+
+    },
+    json: (...args) => {
+        
+        logger.info(`JSON`, getDatePrefix(), ...args);
+
+    },
+    tag: (tag:string, type:`success` | `info` | `error`) => (...args) => {
+        
+        const tagged = logger.withTag(tag);
+        
+        if (tagged[type]) {
+            tagged[type](getDatePrefix(), ...args);
+        }
+    }
+};
 
 
 
 const onError = (error) => {
 
-    console.error(error);
+    logger.error(error);
     
 };
 
@@ -38,7 +92,6 @@ window.onerror = (msg:any, url, lineNo, columnNo, err) => {
     onError(error);
 
 	return true;
-	
 };
 
 
@@ -270,9 +323,7 @@ const VideoRoom = ({ server }) => {
 
 						connect(client, server)
 						.then((rooms) => {
-
-							console.log('rooms', rooms);
-
+							
 							setRooms(rooms);
 
 						});
