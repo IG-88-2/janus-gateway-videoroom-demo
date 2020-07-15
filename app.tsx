@@ -65,7 +65,7 @@ const log = {
 
 const onError = (error) => {
 
-    logger.error(error);
+    log.error(error);
     
 };
 
@@ -358,10 +358,11 @@ const VideoRoom = ({ server }) => {
 					overflow:`auto`
 				}}>
 					{
-						rooms.map((room) => {
+						rooms.map((room, index) => {
 
 							return (
 								<Room 
+									key={`room-${index}`}
 									room={room}
 									onJoin={() => {
 										
@@ -375,7 +376,6 @@ const VideoRoom = ({ server }) => {
 									}}
 								/>
 							);
-
 						})
 					}
 				</div>

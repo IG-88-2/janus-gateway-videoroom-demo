@@ -10,7 +10,7 @@
   "repository": "",
   "scripts": {
     "production": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js --env production --config webpack.config.js",
-    "development:server": "node --max_old_space_size=4096 ./node_modules/.bin/webpack-dev-server -w --env development --config webpack.config.js",
+    "development:server": "node --max_old_space_size=4096 ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --env development --config webpack.config.js",
     "development": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js -w --env development --config webpack.config.js",
     "tests": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js -w --config webpack.config.tests.js"
   },
@@ -83,9 +83,9 @@
     "uniqid": "^5.0.3",
     "url-loader": "^1.0.1",
     "uuid": "^7.0.1",
-    "webpack": "4.34.0",
-    "webpack-cli": "^3.3.5",
-    "webpack-dev-server": "^3.11.0",
+    "webpack": "4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "3.10.3",
     "winston": "^3.1.0",
     "ws": "^7.1.0"
   },
