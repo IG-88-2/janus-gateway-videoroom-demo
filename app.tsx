@@ -448,13 +448,17 @@ app.style.height = '100vh';
 
 document.body.appendChild(app);
 
+//http://localhost:3000?search&user_id=13&host=127.0.0.1&port=8080;
+
 const params = new URLSearchParams(window.location.href);
 
-const user_id = uuidv1(); //params.get(`user_id`);
+const user_id = params.get(`user_id`); //uuidv1();
 
-const host = `127.0.0.1`; //params.get(`host`);
+const host = params.get(`host`); //`127.0.0.1`;
 
-const port = `8080`; //params.get(`port`);
+const port = params.get(`port`); //`8080`;
+
+log.info(`params - ${user_id} ${host} ${port}`);
 
 const server = `ws://${host}:${port}/?id=${user_id}`;
 
