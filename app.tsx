@@ -115,10 +115,11 @@ const onPublisher = (publisher) => {
 	video.muted = true;
 	video.width = 320;
 	video.height = 240;
+	video.style.height = "100%";
 	
-	const container = document.getElementById("container");
+	const container = document.getElementById("local");
 	
-	container.children[0].appendChild(video);
+	container.appendChild(video);
 	
 	video.srcObject = publisher.stream;
 
@@ -144,14 +145,14 @@ const onSubscriber = async (subscriber:JanusSubscriber) => {
 
 	video.id = subscriber.id;
 	video.autoplay = true;
-	video.width = 320;
-	video.height = 240;
-	video.style.background = "green"
-	video.style.padding = "10px"
-
+	video.width = 180;
+	video.height = 120;
+	video.style.background = "green";
+	video.style.padding = "5px";
+	
 	const container = document.getElementById("container");
 
-	container.children[1].appendChild(video);
+	container.appendChild(video);
 	
 	video.srcObject = subscriber.stream;
 
@@ -210,7 +211,9 @@ const disconnect = (client) => {
 
 
 
-const onCreateRoom = (client, roomName) => {
+const onCreateRoom = (client, description:string) => {
+	
+	return client.current.createRoom(description);
 
 };
 
@@ -219,31 +222,19 @@ const onCreateRoom = (client, roomName) => {
 const onJoinRoom = (client, room) => {
 
 	if (client.current) {
-		client.current.join(room.room_id);
+		return client.current.join(room.room_id);
 	}
 
 };
 
 
 
-const onLeaveRoom = (client) => {
+const onLeaveRoom = (client, room) => {
 
 	if (client.current) {
-		client.current.leave();
+		return client.current.leave();
 	}
 	
-};
-
-
-
-const onPause = (client) => {
-
-};
-
-
-
-const onMute = (client) => {
-
 };
 
 
@@ -275,7 +266,7 @@ const Room = ({ room, onJoin, onLeave }) => {
 			<div style={{
 				display:"flex"
 			}}>
-				<button onClick={e => onJoin()}>
+				<button onClick={(e) => onJoin()}>
 					Join
 				</button>
 				<button onClick={(e) => onLeave()}>
@@ -295,7 +286,11 @@ const VideoRoom = ({ server }) => {
 
 	const [rooms, setRooms] = useState([]);
 
-	const [roomName, setRoomName] = useState(``);
+	const [muted, setMuted] = useState(false);
+
+	const [paused, setPaused] = useState(false);
+
+	const [description, setDescription] = useState(``);
 
 
 
@@ -346,8 +341,31 @@ const VideoRoom = ({ server }) => {
 					display:`flex`,
 					flexDirection:`column`
 				}}>
-					<input value={roomName} onChange={(e) => setRoomName(e.target.value)} />
-					<button onClick={(e) => onCreateRoom(client, roomName)}>
+					<input value={description} onChange={(e) => setDescription(e.target.value)} />
+					<button onClick={(e) => {
+
+						onCreateRoom(client, description)
+						.then((result) => {
+
+							log.info('onCreateRoom response');
+							
+							log.json(result);
+
+							return client.current.getRooms().then(({ load }) => load);
+
+						})
+						.then((rooms) => {
+							
+							setRooms(rooms);
+
+						})
+						.catch((error) => {
+
+							onError(error);
+
+						})
+
+					}}>
 						Create Room
 					</button>
 				</div>
@@ -371,7 +389,7 @@ const VideoRoom = ({ server }) => {
 									}} 
 									onLeave={() => {
 
-										onLeaveRoom(room);
+										onLeaveRoom(client, room);
 
 									}}
 								/>
@@ -383,7 +401,6 @@ const VideoRoom = ({ server }) => {
 			</div>
 					
 			<div
-				id={`container`}
 				style={{
 					display:`flex`,
 					flexDirection:`column`,
@@ -403,34 +420,111 @@ const VideoRoom = ({ server }) => {
 				}}>
 
 					<button 
-						onClick={() => onPause(client)}
+						onClick={() => {
+							
+							if (paused) {
+								client.current.resume()
+								.then((result) => {
+
+									if (
+										result && 
+										result.load && 
+										result.load.data && 
+										result.load.data.configured==="ok"
+									) {
+										setPaused(false);
+									}
+
+								});
+							} else {
+								client.current.pause()
+								.then((result) => {
+			
+									if (
+										result && 
+										result.load && 
+										result.load.data && 
+										result.load.data.configured==="ok"
+									) {
+										setPaused(true);
+									}
+										
+								});
+							}
+						}}
 						style={{
-							width:`100%`
+							width:`100%`,
+							height:`21px`
 						}}
 					>
-						Pause
+						{paused ? 'Resume' : 'Pause'}
 					</button>
 
 					<button 
-						onClick={() => onMute(client)}
+						onClick={() => {
+
+							if (muted) {
+								client.current.unmute()
+								.then((result) => {
+
+									if (
+										result && 
+										result.load && 
+										result.load.data && 
+										result.load.data.configured==="ok"
+									) {
+										setMuted(false);
+									}
+
+								});
+							} else {
+								client.current.mute()
+								.then((result) => {
+			
+									if (
+										result && 
+										result.load && 
+										result.load.data && 
+										result.load.data.configured==="ok"
+									) {
+										setMuted(true);
+									}
+										
+								});
+							}
+
+						}}
 						style={{
-							width:`100%`
+							width:`100%`,
+							height:`21px`
 						}}
 					>
-						Mute
+						{muted ? 'Unmute' : 'Mute'}
 					</button>
 
+					<div 
+						id="local"
+						style={{
+							display: `flex`,
+							maxHeight: `calc(100% - 42px)`,
+							width: `100%`,
+							alignItems: `center`,
+							justifyContent: `center`
+						}}
+					/>
+
 				</div>
 
-				<div style={{
-					display:`flex`,
-					flexWrap:`wrap`,
-					height:`66.6%`,
-					width:`100%`,
-					overflow:`auto`
-				}}>
-					
-				</div>
+				<div
+					id="container"
+					style={{
+						display:`flex`,
+						flexWrap:`wrap`,
+						height:`66.6%`,
+						width:`100%`,
+						overflow:`auto`
+					}} 
+				/>
 
 			</div>
 			
@@ -448,15 +542,13 @@ app.style.height = '100vh';
 
 document.body.appendChild(app);
 
-//http://localhost:3000?search&user_id=13&host=127.0.0.1&port=8080;
-
 const params = new URLSearchParams(window.location.href);
 
-const user_id = params.get(`user_id`); //uuidv1();
+const user_id = params.get(`user_id`);
 
-const host = params.get(`host`); //`127.0.0.1`;
+const host = params.get(`host`);
 
-const port = params.get(`port`); //`8080`;
+const port = params.get(`port`);
 
 log.info(`params - ${user_id} ${host} ${port}`);
 
