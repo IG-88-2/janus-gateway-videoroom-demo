@@ -57,7 +57,8 @@ const log = {
         
         if (tagged[type]) {
             tagged[type](getDatePrefix(), ...args);
-        }
+		}
+		
     }
 };
 
@@ -92,6 +93,7 @@ window.onerror = (msg:any, url, lineNo, columnNo, err) => {
     onError(error);
 
 	return true;
+
 };
 
 
@@ -196,14 +198,21 @@ const connect = (client, server) => {
 
 
 
-const disconnect = (client) => {
+const disconnect = async (client) => {
 
 	if (client.current) {
 		const video = document.getElementById(client.current.publisher.id);
+		
 		if (video) {
 			video.remove();
 		}
-		client.current.terminate();
+
+		try {
+			await client.current.terminate();
+		} catch(error) {
+			console.error('here', error);
+		}
+
 		client.current = null;
 	}
 
