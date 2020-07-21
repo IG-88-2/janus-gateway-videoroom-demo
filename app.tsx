@@ -1,13 +1,25 @@
 import './assets/styles.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { useState, useEffect, useRef } from 'react';
-import { v1 as uuidv1 } from 'uuid';
+import { useState, useRef } from 'react';
 import { Consola, BrowserReporter } from 'consola';
 import JanusClient from './janus-gateway-client/lib/janus-gateway-client';
 import JanusSubscriber from './janus-gateway-client/lib/subscriber';
 import JanusPublisher from './janus-gateway-client/lib/publisher';
 const moment = require('moment');
+
+
+
+let enabled = true;
+
+
+
+const log : any = new Consola({
+    level: 3,
+    reporters: [
+      new BrowserReporter()
+    ]
+});
 
 
 
@@ -21,44 +33,55 @@ const getDatePrefix = () => {
 
 
 
-const logger : any = new Consola({
-    level: 3,
-    reporters: [
-      new BrowserReporter()
-    ]
-});
+const logger = {
+    enable: () => {
 
-
-
-const log = {
+        enabled = true;
+    
+    },
+    disable: () => {
+    
+        enabled = false;
+    
+    },
     success: (...args) => {
-        
-        logger.success(getDatePrefix(), ...args);
+
+        if (enabled) {
+            log.success(getDatePrefix(), ...args);
+        }
 
     },
     info: (...args) => {
-        
-        logger.info(getDatePrefix(), ...args);
-        
+
+        if (enabled) {
+            log.info(getDatePrefix(), ...args);
+        }
+
     },
     error: (error:any) => {
-        
-        logger.error(error);
+
+        if (enabled) {
+            log.error(error);
+        }
 
     },
     json: (...args) => {
-        
-        logger.info(`JSON`, getDatePrefix(), ...args);
+
+        if (enabled) {
+            log.info(`JSON`, getDatePrefix(), ...args);
+        }
 
     },
     tag: (tag:string, type:`success` | `info` | `error`) => (...args) => {
+
+        if (enabled) {
+            const tagged = log.withTag(tag);
+            
+            if (tagged[type]) {
+                tagged[type](getDatePrefix(), ...args);
+            }
+        }
         
-        const tagged = logger.withTag(tag);
-        
-        if (tagged[type]) {
-            tagged[type](getDatePrefix(), ...args);
-		}
-		
     }
 };
 
@@ -66,7 +89,7 @@ const log = {
 
 const onError = (error) => {
 
-    log.error(error);
+    logger.error(error);
     
 };
 
@@ -98,17 +121,7 @@ window.onerror = (msg:any, url, lineNo, columnNo, err) => {
 
 
 
-const onPublisher = (publisher) => {
-
-	publisher.addEventListener("terminated", () => {
-		
-		const video = document.getElementById(publisher.id);
-
-		if (video) {
-			video.remove();
-		}
-
-	});
+const onPublisher = (publisher, onDisconnected) => {
 
 	const video = document.createElement("video");
 
@@ -122,6 +135,34 @@ const onPublisher = (publisher) => {
 	const container = document.getElementById("local");
 	
 	container.appendChild(video);
+
+	publisher.addEventListener("terminated", () => {
+		
+		const video = document.getElementById(publisher.id);
+
+		if (video) {
+			video.remove();
+		}
+
+	});
+
+	publisher.addEventListener("disconnected", () => {
+		
+		//TODO where i should reinitialize in case webrtc down ???
+		//TODO prevent any actions while renegotiation is happening
+		//reinitialize
+		logger.info('[publisher] handling disconnected event...');
+		/*
+		publisher.initialize()
+		.then(() => {
+
+			log.info('[publisher] handling disconnected event...succesfully renegotiated');
+			
+			video.srcObject = publisher.stream;
+
+		});
+		*/
+	});
 	
 	video.srcObject = publisher.stream;
 
@@ -130,18 +171,6 @@ const onPublisher = (publisher) => {
 
 
 const onSubscriber = async (subscriber:JanusSubscriber) => {
-		
-	subscriber.addEventListener("leaving", () => {
-		
-		const video = document.getElementById(subscriber.id);
-
-		if (video) {
-			video.remove();
-		}
-
-	});
-
-	await subscriber.initialize();
 
 	const video = document.createElement("video");
 
@@ -155,8 +184,71 @@ const onSubscriber = async (subscriber:JanusSubscriber) => {
 	const container = document.getElementById("container");
 
 	container.appendChild(video);
+
+	subscriber.addEventListener("terminated", () => {
+
+		logger.info('[subscriber] handling terminated event...');
+		
+		const video = document.getElementById(subscriber.id);
+
+		if (video) {
+			video.remove();
+		}
+
+	});
+
+	subscriber.addEventListener("leaving", () => {
+
+		logger.info('[subscriber] handling leaving event...');
+		
+		const video = document.getElementById(subscriber.id);
+
+		if (video) {
+			video.remove();
+		}
+
+	});
+
+	subscriber.addEventListener("disconnected", () => {
+		
+		logger.info('[subscriber] handling disconnected event...');
+		
+	});
+
+	await subscriber.initialize();
 	
 	video.srcObject = subscriber.stream;
+
+};
+
+
+
+const onDisconnected = (client) => {
+
+	logger.info(`handling publisher disconnect...`);
+
+	const room_id = client.current.room_id;
+
+	logger.info(`handling publisher disconnect...last room id ${room_id}`);
+
+	client.current.leave()
+	.then(() => {
+
+		logger.info(`handling publisher disconnect...successfully left...`);
+
+		return client.current.join(room_id);
+
+	})
+	.then(() => {
+
+		logger.info(`handling publisher disconnect...successfully rejoined...`);
+		
+	})
+	.catch((error) => {
+
+		logger.error(error);
+
+	});
 
 };
 
@@ -170,9 +262,10 @@ const connect = (client, server) => {
 
 	client.current = new JanusClient({
 		server,
+		logger,
 		onPublisher: (publisher:JanusPublisher) => {
 
-			onPublisher(publisher);
+			onPublisher(publisher, onDisconnected);
 
 		},
 		onSubscriber: async (subscriber:JanusSubscriber) => {
@@ -201,17 +294,15 @@ const connect = (client, server) => {
 const disconnect = async (client) => {
 
 	if (client.current) {
-		const video = document.getElementById(client.current.publisher.id);
+		if (client.current.publisher) {
+			const video = document.getElementById(client.current.publisher.id);
+			
+			if (video) {
+				video.remove();
+			}
+		}
 		
-		if (video) {
-			video.remove();
-		}
-
-		try {
-			await client.current.terminate();
-		} catch(error) {
-			console.error('here', error);
-		}
+		await client.current.terminate();
 
 		client.current = null;
 	}
@@ -257,6 +348,7 @@ const Room = ({ room, onJoin, onLeave }) => {
 
 	return (
 		<div 
+			className="room-element"
 			key={room_id}
 			style={{
 				display:"flex",
@@ -269,16 +361,22 @@ const Room = ({ room, onJoin, onLeave }) => {
 			<div>
 				{instance_id}
 			</div>
-			<div>
+			<div className="room-id">
 				{room_id}
 			</div>
 			<div style={{
 				display:"flex"
 			}}>
-				<button onClick={(e) => onJoin()}>
+				<button 
+					id={`join-${room_id}`}
+					onClick={(e) => onJoin()}
+				>
 					Join
 				</button>
-				<button onClick={(e) => onLeave()}>
+				<button
+					id={`leave-${room_id}`}
+					onClick={(e) => onLeave()}
+				>
 					Leave
 				</button>
 			</div>
@@ -323,25 +421,31 @@ const VideoRoom = ({ server }) => {
 				<div style={{
 					display:`flex`
 				}}>
-					<button onClick={() => {
+					<button 
+						id="connect"
+						onClick={() => {
 
-						connect(client, server)
-						.then((rooms) => {
-							
-							setRooms(rooms);
+							connect(client, server)
+							.then((rooms) => {
+								
+								setRooms(rooms);
 
-						});
+							});
 
-					}}>
+						}}
+					>
 						Connect
 					</button>
-					<button onClick={() => {
+					<button 
+						id="disconnect"
+						onClick={() => {
 
-						disconnect(client);
-						
-						setRooms([]);
+							disconnect(client);
+							
+							setRooms([]);
 
-					}}>
+						}}
+					>
 						Disconnect
 					</button>
 				</div>
@@ -356,9 +460,9 @@ const VideoRoom = ({ server }) => {
 						onCreateRoom(client, description)
 						.then((result) => {
 
-							log.info('onCreateRoom response');
+							logger.info('onCreateRoom response');
 							
-							log.json(result);
+							logger.json(result);
 
 							return client.current.getRooms().then(({ load }) => load);
 
@@ -379,11 +483,14 @@ const VideoRoom = ({ server }) => {
 					</button>
 				</div>
 
-				<div style={{
-					display:`flex`,
-					flexDirection:`column`,
-					overflow:`auto`
-				}}>
+				<div 
+					className="rooms"
+					style={{
+						display:`flex`,
+						flexDirection:`column`,
+						overflow:`auto`
+					}}
+				>
 					{
 						rooms.map((room, index) => {
 
@@ -511,11 +618,46 @@ const VideoRoom = ({ server }) => {
 						{muted ? 'Unmute' : 'Mute'}
 					</button>
 
+					<button 
+						onClick={() => {
+
+							if (
+								client.current.publisher
+							) {
+								client.current.publisher.renegotiate({
+									audio: true,
+									video: true
+								});
+							}
+
+						}}
+						style={{
+							width:`100%`,
+							height:`21px`
+						}}
+					>
+						Renegotiate
+					</button>
+
+					<button 
+						onClick={() => {
+
+							clearInterval(client.current.keepAliveInterval);
+							
+						}}
+						style={{
+							width:`100%`,
+							height:`21px`
+						}}
+					>
+						Stop Keepalive
+					</button>
+
 					<div 
 						id="local"
 						style={{
 							display: `flex`,
-							maxHeight: `calc(100% - 42px)`,
+							maxHeight: `calc(100% - 84px)`,
 							width: `100%`,
 							alignItems: `center`,
 							justifyContent: `center`
@@ -559,7 +701,7 @@ const host = params.get(`host`);
 
 const port = params.get(`port`);
 
-log.info(`params - ${user_id} ${host} ${port}`);
+logger.info(`params - ${user_id} ${host} ${port}`);
 
 const server = `ws://${host}:${port}/?id=${user_id}`;
 
