@@ -1,4 +1,4 @@
 [submodule "janus-gateway-client"]
 	path = janus-gateway-client
-	url = https://github.com/WildHorse19/janus-gateway-client
+	url = https://github.com/IG-88-2/janus-gateway-client
 	branch = master

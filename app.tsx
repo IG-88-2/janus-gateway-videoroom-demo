@@ -257,6 +257,7 @@ const onDisconnected = (client) => {
 const connect = (client, server) => {
 
 	if (client.current) {
+		console.log('already connected...');
 		return client.current.getRooms().then(({ load }) => load);
 	}
 
@@ -303,8 +304,13 @@ const disconnect = async (client) => {
 				video.remove();
 			}
 		}
-		
-		await client.current.terminate();
+
+		try {
+			await client.current.terminate();
+			console.log('terminated!');
+		} catch(error) {
+			console.error(error);
+		}
 
 		client.current = null;
 	}
