@@ -1,12 +1,12 @@
 import './assets/styles.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import ReconnectingWebSocket from 'reconnecting-websocket';
+const moment = require('moment');
+import { v1 as uuidv1 } from 'uuid';
 import { useState, useRef } from 'react';
 import { Consola, BrowserReporter } from 'consola';
-import JanusClient from './janus-gateway-client/lib/janus-gateway-client';
-import JanusSubscriber from './janus-gateway-client/lib/subscriber';
-import JanusPublisher from './janus-gateway-client/lib/publisher';
-const moment = require('moment');
+import { JanusClient } from './janus-gateway-client/dist';
 
 
 
@@ -15,7 +15,7 @@ let enabled = true;
 
 
 const log : any = new Consola({
-    level: 3,
+    level: 3, 
     reporters: [
       new BrowserReporter()
     ]
@@ -170,7 +170,7 @@ const onPublisher = (publisher, onDisconnected) => {
 
 
 
-const onSubscriber = async (subscriber:JanusSubscriber) => {
+const onSubscriber = async (subscriber) => {
 
 	const video = document.createElement("video");
 
@@ -263,12 +263,13 @@ const connect = (client, server) => {
 	client.current = new JanusClient({
 		server,
 		logger,
-		onPublisher: (publisher:JanusPublisher) => {
+		WebSocket: ReconnectingWebSocket,
+		onPublisher: (publisher) => {
 
 			onPublisher(publisher, onDisconnected);
 
 		},
-		onSubscriber: async (subscriber:JanusSubscriber) => {
+		onSubscriber: async (subscriber) => {
 			
 			onSubscriber(subscriber);
 
@@ -277,7 +278,8 @@ const connect = (client, server) => {
 
 			onError(error);
 
-		}
+		},
+		getId: () => uuidv1()
 	});
 
 	return client.current.initialize()
