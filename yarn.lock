@@ -6378,6 +6378,14 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
+janus-gateway-client@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/janus-gateway-client/-/janus-gateway-client-0.0.1.tgz#c74d6f42b0061f1a245398d311c5dc6215e57f67"
+  integrity sha512-7HDQJGyThNxNrYqQRblm3psMW5pKjt29lJY8mb3OrnK+zKXoIQCqPtChsxa9ATIPzuCALZxq1mQV4VElPl5Y7Q==
+  dependencies:
+    reconnecting-websocket "^4.4.0"
+    uuid "^3.2.1"
+
 js-base64@^2.1.9:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.6.2.tgz#cf9301bc5cc756892a9a6c8d7138322e5944fb0d"
@@ -10277,7 +10285,7 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-uuid@^3.0.1, uuid@^3.1.0, uuid@^3.3.2:
+uuid@^3.0.1, uuid@^3.1.0, uuid@^3.2.1, uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
