@@ -703,7 +703,7 @@ document.body.appendChild(app);
 
 const params = new URLSearchParams(window.location.href);
 
-const user_id = '12'; //params.get(`user_id`);
+const user_id = params.get(`user_id`); //'12'
 
 const host = params.get(`host`);
 
@@ -711,7 +711,7 @@ const port = params.get(`port`);
 
 logger.info(`params - ${user_id} ${host} ${port}`);
 
-const url = `3.121.126.200`;
+const url = host; //`3.121.126.200`;
 
 const domain = `ec2-3-121-126-200.eu-central-1.compute.amazonaws.com`;
 
