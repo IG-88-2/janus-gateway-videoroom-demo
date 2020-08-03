@@ -9,9 +9,8 @@
   "main": "./production/main.js",
   "repository": "",
   "scripts": {
-    "production": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js --env production --config webpack.config.js",
     "development:server": "node --max_old_space_size=4096 ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --env development --config webpack.config.js",
-    "development": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js -w --env development --config webpack.config.js",
+    "build": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js --env development --config webpack.config.js",
     "tests": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js -w --config webpack.config.tests.js"
   },
   "devDependencies": {
@@ -56,7 +55,7 @@
     "fs-extra": "^7.0.0",
     "ie-array-find-polyfill": "^1.1.0",
     "image-webpack-loader": "^4.3.1",
-    "janus-gateway-client": "^0.0.1",
+    "janus-gateway-client": "^0.0.2",
     "json2mq": "^0.2.0",
     "lodash.debounce": "^4.0.8",
     "mocha": "^6.2.0",

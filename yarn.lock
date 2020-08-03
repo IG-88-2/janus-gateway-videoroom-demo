@@ -6378,10 +6378,10 @@ isurl@^1.0.0-alpha5:
     has-to-string-tag-x "^1.2.0"
     is-object "^1.0.1"
 
-janus-gateway-client@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/janus-gateway-client/-/janus-gateway-client-0.0.1.tgz#c74d6f42b0061f1a245398d311c5dc6215e57f67"
-  integrity sha512-7HDQJGyThNxNrYqQRblm3psMW5pKjt29lJY8mb3OrnK+zKXoIQCqPtChsxa9ATIPzuCALZxq1mQV4VElPl5Y7Q==
+janus-gateway-client@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/janus-gateway-client/-/janus-gateway-client-0.0.2.tgz#97aa354a51f25e2e9f2f4f58a333479407c9b1ec"
+  integrity sha512-6rkqGPaVUFOZsW4NDLq+lXxM142p3qaxkguC6ahhRlKN/EuOtkt7u3SjP0Hn4+t3JYIt9UL7hGUpOqFme5k97g==
   dependencies:
     reconnecting-websocket "^4.4.0"
     uuid "^3.2.1"

@@ -6,7 +6,7 @@ const moment = require('moment');
 import { v1 as uuidv1 } from 'uuid';
 import { useState, useRef } from 'react';
 import { Consola, BrowserReporter } from 'consola';
-import { JanusClient } from 'janus-gateway-client'; //'./janus-gateway-client/dist';
+import { JanusClient } from 'janus-gateway-client';
 
 
 
@@ -711,7 +711,7 @@ const port = params.get(`port`);
 
 logger.info(`params - ${user_id} ${host} ${port}`);
 
-const url = host; //`3.121.126.200`;
+const url = `3.121.126.200`; //host; //
 
 const domain = `ec2-3-121-126-200.eu-central-1.compute.amazonaws.com`;
 
