@@ -67,6 +67,7 @@
     "react-indiana-drag-scroll": "https://github.com/WildHorse19/react-indiana-drag-scroll",
     "react-redux": "^5.0.7",
     "react-tippy": "^1.2.3",
+    "react-videoroom-janus": "^0.0.2",
     "reconnecting-websocket": "^4.4.0",
     "redux": "^4.0.0",
     "request": "2.88.0",

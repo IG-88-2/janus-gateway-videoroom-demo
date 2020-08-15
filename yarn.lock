@@ -8607,6 +8607,11 @@ react-transition-group@^2.2.1:
     prop-types "^15.6.2"
     react-lifecycles-compat "^3.0.4"
 
+react-videoroom-janus@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/react-videoroom-janus/-/react-videoroom-janus-0.0.2.tgz#e66c3db64877372c4b198870eb3e89af16f53462"
+  integrity sha512-RSw8Ar3Dew37NuIvw5UqHjiaMEANruq05WSDfIJ5xNNzGZvSs5LZtGHK5oqhAcndzPpdbRjWcYI+OVLf9z99fw==
+
 react@^16.4.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
