@@ -71,6 +71,10 @@ class App extends Component<any,any> {
 		
 		super(props);
 
+		this.state = {
+			room: null
+		};
+
 	}
 
 	
