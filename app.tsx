@@ -5,7 +5,207 @@ const moment = require('moment');
 import { v1 as uuidv1 } from 'uuid';
 import { useState, useRef, Component } from 'react';
 import { Consola, BrowserReporter } from 'consola';
-import { JanusVideoRoom } from 'react-videoroom-janus';
+import { JanusVideoRoom } from './react-janus-videoroom/react-janus-videoroom'; //'react-videoroom-janus'; //
+import Select from 'react-select';
+
+
+
+const styles = {
+	'0': {
+		container:{
+			height: `100%`,
+			width: `100%`,
+			position: `relative`
+		},
+		localVideo:{
+			width: `200px`,
+			height: `auto`
+		},
+		localVideoContainer:{
+			position: `absolute`,
+			top: `50px`,
+			right: `50px`
+		},
+	},
+	'1': {
+		container:{
+			height: `100%`,
+			width: `100%`,
+			position: `relative`
+		},
+		video:{
+			width: `100%`,
+		},
+		videoContainer:{
+			width: `100%`,
+			height: `100%`
+		},
+		localVideo:{
+			width: `200px`,
+			height: `auto`
+		},
+		localVideoContainer:{
+			position: `absolute`,
+			top: `50px`,
+			right: `50px`
+		}
+	},
+	'2': {
+		container:{
+			height: `100%`,
+			width: `100%`,
+			display: `flex`,
+			position: `relative`
+		},
+		video:{
+			width: `100%`,
+			height: `100%`,
+			objectFit: `cover`
+		},
+		videoContainer:{
+			width: `100%`,
+			height: `100%`
+		},
+		localVideo:{
+			width: `200px`,
+			height: `auto`
+		},
+		localVideoContainer:{
+			position: `absolute`,
+    		right: `calc(50% - 100px)`
+		}
+	},
+	'3': {
+		container:{
+			display: `grid`,
+			gridTemplateColumns: `50% 50%`
+		},
+		video:{
+			width: `100%`,
+			height: `100%`,
+			objectFit: `cover`
+		},
+		localVideo:{
+			height: `100%`
+		},
+		localVideoContainer:{
+			
+		}
+	},
+	'4': {
+		container:{
+			display: `grid`,
+			gridTemplateColumns: `50% 50%`,
+			gridTemplateRows: `50% 50%`,
+    		height: `100%`
+		},
+		video:{
+			width: `100%`,
+			height: `100%`,
+			objectFit: `cover`
+		},
+		localVideo:{
+			height: `100%`,
+		},
+		localVideoContainer:{
+		    position: `absolute`,
+			top: `calc(50% - 80px)`,
+			left: `calc(50% + 70px)`,
+			borderRadius: `200px`,
+			overflow: `hidden`,
+			width: `160px`,
+			height: `160px`
+		}
+	},
+	'5': {
+		container:{
+			display: `grid`,
+			gridTemplateColumns: `33.3% 33.3% 33.3%`,
+			gridTemplateRows: `50% 50%`,
+    		height: `100%`
+		},
+		video:{
+			width: `100%`,
+			height: `100%`,
+			objectFit: `cover`
+		},
+		localVideo:{
+			height: `100%`
+		},
+		localVideoContainer:{
+			
+		}
+	}
+};
+
+
+
+interface VideoProps {
+	id:string,
+	muted:boolean,
+	style:any,
+	stream:any
+}
+
+
+
+interface VideoState {
+
+}
+
+
+
+class Video extends Component<VideoProps,VideoState> {
+	video:any
+	container:any 
+
+	constructor(props) {
+
+		super(props);
+		
+	}
+	
+
+
+	componentDidMount() {
+		
+		this.video.srcObject = this.props.stream;
+	
+		this.video.play();
+
+	}
+
+
+
+	componentWillReceiveProps(nextProps) {
+		
+		if (nextProps.stream!==this.props.stream) {
+			this.video.srcObject = nextProps.stream;
+			this.video.play();
+		}
+
+	}
+
+
+
+	render () {
+
+		const {
+			id,
+			muted,
+			style
+		} = this.props;
+
+		return <video
+			id={id}
+			muted={muted}
+			style={style}
+			ref={(video) => { this.video = video; }}
+		/>
+		
+	}
+
+}
 
 
 
@@ -65,94 +265,286 @@ const logger = {
 
 
 
-class App extends Component<any,any> {
+interface AppProps {
+	server:string
+}
+
+
+
+interface AppState {
+	selectedRoom: any,
+	cameras: any[],
+	rooms: any[],
+	mediaConstraints: any
+}
+
+
+
+class App extends Component<AppProps,AppState> {
+	rtcConfiguration:any
 
 	constructor(props) {
 		
 		super(props);
 
 		this.state = {
-			room: null
+			selectedRoom: null,
+			cameras: [],
+			rooms: [],
+			mediaConstraints: {
+				audio: true,
+				video: true
+			}
 		};
+
+		this.rtcConfiguration = {
+			"iceServers": [{
+				urls: "stun:stun.voip.eutelia.it:3478"
+			}],
+			"sdpSemantics": "unified-plan"
+		};
+		
+	}
+
+
+
+	componentDidMount() {
+
+		this.getCameras()
+		.then((cameras) => {
+			
+			this.setState({
+				cameras:cameras.map(({ deviceId, label }) => {
+
+					return {
+						label,
+						value:deviceId
+					}
+
+				})
+			});
+
+		});
 
 	}
 
+
+	getCustomStyles = (nParticipants) => {
+		
+		const key = String(nParticipants);
+
+		const s = styles[key];
+
+		return s || {};
+
+	}
 	
 
-	render() {
 
-		return <div>
-			<div>
-				app
-			</div>
-			<JanusVideoRoom
-				logger={logger}
-				generateId={() => uuidv1()}
-				onPublisherDisconnected={(publisher:any) => {
-
-				}}
-				rtcConfiguration={{
-					"iceServers": [{
-						urls: "stun:stun.voip.eutelia.it:3478"
-					}],
-					"sdpSemantics" : "unified-plan"
-				}}
-				mediaConstraints={{}}
-				customStyles={{
-					video:{
+	selectRoom = (room_id) => {
 		
-					},
-					container:{
+		this.setState({
+			selectedRoom: null
+		}, () => {
+
+			this.setState({
+				selectedRoom: room_id
+			});
+
+		});
+
+	}
+
+
+
+	onPublisherDisconnected = (publisher:any) => {
 						
-					},
-					videoContainer:{
-						
-					},
-					localVideo:{
-						
-					},
-					localVideoContainer:{
-						
+		logger.info('onPublisherDisconnected', publisher);
+
+	}
+
+
+
+	onConnected = (publisher:any) => {
+
+		logger.info('onConnected', publisher);
+
+	}
+
+
+
+	onDisconnected = (error) => {
+
+		logger.info('onDisconnected', error);
+
+	}
+
+
+
+	onRooms = (rooms:any) => {
+
+		logger.info('onRooms', rooms);
+
+		this.setState({
+			rooms
+		});
+		
+	}
+
+
+
+	onError = (error:any) => {
+
+		logger.info('onError', error);
+
+	}
+
+
+
+	onParticipantJoined = (participant:any) => {
+		
+		logger.info('onParticipantJoined', participant);
+
+	}
+
+
+
+	onParticipantLeft = (participant:any) => {
+		
+		logger.info('onParticipantLeft', participant);
+
+	}
+
+
+
+	getCameras = async () => {
+
+		const devices = await navigator.mediaDevices.enumerateDevices();
+
+		const cameras = devices.filter((d) => d.kind==="videoinput");
+
+		return cameras;
+		
+	}
+
+
+
+	render() {
+		
+		return <div style={{
+			height:`100%`,
+			width:`100%`,
+			display:`flex`
+		}}>
+			<div style={{
+				width:`300px`,
+				height:`100%`
+			}}>
+				<div style={{
+					display:`flex`,
+					flexDirection:`column`,
+					height:`100%`,
+					width:`100%`,
+					background:`rgba(0,140,220,1)`,
+					overflowX:`hidden`,
+					overflowY:`auto`
+				}}>
+					<div style={{
+						padding: `10px`
+					}}>
+						<Select
+							//className="basic-single"
+							//classNamePrefix="select"
+							//name="color"
+							options={this.state.cameras}
+							onChange={(r) => {
+								
+								this.setState({
+									mediaConstraints: {
+										audio: true,
+										video: { 
+											deviceId: { 
+												exact: r.value
+											}
+										}
+									}
+								});
+
+							}}
+						/>
+					</div>
+					{
+						this.state.rooms.map((room, index) => {
+							
+							return (
+								<div
+									key={`room-${index}`}
+									style={{
+										margin: `10px`,
+										background: `white`,
+										padding: `20px`,
+										boxShadow: `0px 0px 5px 5px rgba(0,0,0,0.1)`,
+										cursor: `pointer`
+									}}
+									onClick={(e) => {
+										
+										this.selectRoom(room.room_id);
+
+									}}
+								>
+									{room.description}
+								</div>
+							);
+
+						})
 					}
-				}}
-				server={this.props.server}
-				room={this.state.room}
-				onConnected={(publisher:any) => {
+				</div>
+			</div>
+			<div style={{
+				flex:1,
+				height:`100%`
+			}}>
+				<JanusVideoRoom
+					generateId={() => uuidv1()} //TODO review
 
-				}}
-				onDisconnected={(error) => {
+					logger={logger}
+					server={this.props.server}
+					room={this.state.selectedRoom}
+					onPublisherDisconnected={this.onPublisherDisconnected}
+					rtcConfiguration={this.rtcConfiguration}
+					mediaConstraints={this.state.mediaConstraints}
+					getCustomStyles={(n:number) => {
 
-				}}
-				onRooms={(rooms:any) => {
+						const customStyles = this.getCustomStyles(n);
 
-				}}
-				onError={(error:any) => {
+						return customStyles;
 
-				}}
-				onParticipantJoined={(participant:any) => {
+					}}
+					onConnected={this.onConnected}
+					onDisconnected={this.onDisconnected}
+					onRooms={this.onRooms}
+					onError={this.onError}
+					onParticipantJoined={this.onParticipantJoined}
+					onParticipantLeft={this.onParticipantLeft}
+					/*
+					renderContainer={(children:any) => {
 
-				}}
-				onParticipantLeft={(participant:any) => {
+						return null;
 
-				}}
-				/*
-				renderContainer={(children:any) => {
+					}}
+					renderStream={(subscriber:any) => {
 
-					return null;
+						return null;
 
-				}}
-				renderStream={(subscriber:any) => {
+					}}
+					renderLocalStream={(publisher:any) => {
 
-					return null;
+						return null;
 
-				}}
-				renderLocalStream={(publisher:any) => {
-
-					return null;
-
-				}}
-				*/
-			/>
+					}}
+					*/
+				/>
+			</div>
 		</div>
 	
 	}
@@ -161,9 +553,9 @@ class App extends Component<any,any> {
 
 const app = document.getElementById('application');
 
-app.style.width = '100vw';
+app.style.width = `calc(100vw - 20px)`;
 
-app.style.height = '100vh';
+app.style.height = `calc(100vh - 20px)`;
 
 document.body.appendChild(app);
 
