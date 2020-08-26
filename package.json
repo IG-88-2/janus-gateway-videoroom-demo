@@ -38,7 +38,7 @@
     "copy-webpack-plugin": "^4.5.1",
     "cross-env": "^5.2.0",
     "css-loader": "^4.2.1",
-    "janus-gateway-client": "^0.0.38",
+    "janus-gateway-client": "^0.0.42",
     "moment": "^2.27.0",
     "ramda": "^0.26.1",
     "react": "^16.4.0",

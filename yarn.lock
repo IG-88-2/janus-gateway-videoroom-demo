@@ -4759,10 +4759,10 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
-janus-gateway-client@^0.0.38:
-  version "0.0.38"
-  resolved "https://registry.yarnpkg.com/janus-gateway-client/-/janus-gateway-client-0.0.38.tgz#2ad57d888e6d778cd9515deedb2f52f11979e28b"
-  integrity sha512-PJW0Z/WnYQjpdQp8dvAL4tH1B2qomBAq/QEptmjb2Lz62LRCyEbPtzd2JFtqvfatraqcyx/P1u/z0Xz7gxZYzQ==
+janus-gateway-client@^0.0.42:
+  version "0.0.42"
+  resolved "https://registry.yarnpkg.com/janus-gateway-client/-/janus-gateway-client-0.0.42.tgz#9868a9523e676d416d42fcbebec5ae2c0fb5f202"
+  integrity sha512-/rrZQFxVbrlmJGPCZxkiwKgPeJmgooaUB9T4NwAWvKRgD2QFr+IXdrmeLu9sg/ppsgNltI0diDRXU0GXgPv0iA==
   dependencies:
     "@babel/polyfill" "^7.10.4"
 

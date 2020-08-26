@@ -266,7 +266,8 @@ const logger = {
 
 
 interface AppProps {
-	server:string
+	server:string,
+	user_id:string
 }
 
 
@@ -275,7 +276,7 @@ interface AppState {
 	selectedRoom: any,
 	cameras: any[],
 	rooms: any[],
-	mediaConstraints: any
+	camera: any
 }
 
 
@@ -291,10 +292,7 @@ class App extends Component<AppProps,AppState> {
 			selectedRoom: null,
 			cameras: [],
 			rooms: [],
-			mediaConstraints: {
-				audio: true,
-				video: true
-			}
+			camera: null
 		};
 
 		this.rtcConfiguration = {
@@ -438,7 +436,7 @@ class App extends Component<AppProps,AppState> {
 		}}>
 			<div style={{
 				width:`300px`,
-				height:`100%`
+				height:`calc(100% - 50px)`
 			}}>
 				<div style={{
 					display:`flex`,
@@ -453,21 +451,11 @@ class App extends Component<AppProps,AppState> {
 						padding: `10px`
 					}}>
 						<Select
-							//className="basic-single"
-							//classNamePrefix="select"
-							//name="color"
 							options={this.state.cameras}
 							onChange={(r) => {
 								
 								this.setState({
-									mediaConstraints: {
-										audio: true,
-										video: { 
-											deviceId: { 
-												exact: r.value
-											}
-										}
-									}
+									camera: r
 								});
 
 							}}
@@ -492,7 +480,7 @@ class App extends Component<AppProps,AppState> {
 
 									}}
 								>
-									{room.description}
+									{room.description} ({room.instance_id})
 								</div>
 							);
 
@@ -505,14 +493,23 @@ class App extends Component<AppProps,AppState> {
 				height:`100%`
 			}}>
 				<JanusVideoRoom
-					generateId={() => uuidv1()} //TODO review
-
 					logger={logger}
 					server={this.props.server}
 					room={this.state.selectedRoom}
 					onPublisherDisconnected={this.onPublisherDisconnected}
 					rtcConfiguration={this.rtcConfiguration}
-					mediaConstraints={this.state.mediaConstraints}
+					camera={this.state.camera}
+					user_id={this.props.user_id}
+					onConnected={this.onConnected}
+					onDisconnected={this.onDisconnected}
+					onRooms={this.onRooms}
+					onError={this.onError}
+					onParticipantJoined={this.onParticipantJoined}
+					onParticipantLeft={this.onParticipantLeft}
+					mediaConstraints={{
+						video: true,
+						audio: true
+					}}
 					getCustomStyles={(n:number) => {
 
 						const customStyles = this.getCustomStyles(n);
@@ -520,12 +517,6 @@ class App extends Component<AppProps,AppState> {
 						return customStyles;
 
 					}}
-					onConnected={this.onConnected}
-					onDisconnected={this.onDisconnected}
-					onRooms={this.onRooms}
-					onError={this.onError}
-					onParticipantJoined={this.onParticipantJoined}
-					onParticipantLeft={this.onParticipantLeft}
 					/*
 					renderContainer={(children:any) => {
 
@@ -573,6 +564,6 @@ const url = `127.0.0.1`; //`3.121.126.200`; //host; //
 
 const server = `ws://${url}:8080/?id=${user_id}`; //`ws://${host}:${port}/?id=${user_id}`;
 
-ReactDOM.render(<App server={server} />, app);
+ReactDOM.render(<App server={server} user_id={user_id} />, app);
 //http://localhost:3000?search&user_id=12&host=127.0.0.1&port=8080
 //http://localhost:3000?search&user_id=12&host=ec2-3-121-126-200.eu-central-1.compute.amazonaws.com&port=8080
