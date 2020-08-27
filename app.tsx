@@ -197,10 +197,12 @@ class Video extends Component<VideoProps,VideoState> {
 		} = this.props;
 
 		return <video
-			id={id}
+			id={`video-${id}`}
 			muted={muted}
 			style={style}
-			ref={(video) => { this.video = video; }}
+			ref={(video) => { 
+				this.video = video; 
+			}}
 		/>
 		
 	}
@@ -276,7 +278,7 @@ interface AppState {
 	selectedRoom: any,
 	cameras: any[],
 	rooms: any[],
-	camera: any
+	cameraId: string
 }
 
 
@@ -292,7 +294,7 @@ class App extends Component<AppProps,AppState> {
 			selectedRoom: null,
 			cameras: [],
 			rooms: [],
-			camera: null
+			cameraId: null
 		};
 
 		this.rtcConfiguration = {
@@ -455,7 +457,7 @@ class App extends Component<AppProps,AppState> {
 							onChange={(r) => {
 								
 								this.setState({
-									camera: r
+									cameraId: r.value
 								});
 
 							}}
@@ -466,6 +468,8 @@ class App extends Component<AppProps,AppState> {
 							
 							return (
 								<div
+									className="room"
+									id={`room-${room.room_id}`}
 									key={`room-${index}`}
 									style={{
 										margin: `10px`,
@@ -498,7 +502,7 @@ class App extends Component<AppProps,AppState> {
 					room={this.state.selectedRoom}
 					onPublisherDisconnected={this.onPublisherDisconnected}
 					rtcConfiguration={this.rtcConfiguration}
-					camera={this.state.camera}
+					cameraId={this.state.cameraId}
 					user_id={this.props.user_id}
 					onConnected={this.onConnected}
 					onDisconnected={this.onDisconnected}
@@ -517,23 +521,52 @@ class App extends Component<AppProps,AppState> {
 						return customStyles;
 
 					}}
-					/*
 					renderContainer={(children:any) => {
 
-						return null;
-
+						const customStyles = this.getCustomStyles(1);
+						
+						return (
+							<div style={customStyles.container}>
+								{children}
+							</div>
+						);
+						
 					}}
 					renderStream={(subscriber:any) => {
 
-						return null;
+						const customStyles = this.getCustomStyles(1);
+
+						return (
+							<div 
+								key={`subscriber-${subscriber.id}`}
+								style={customStyles.videoContainer}
+							>
+								<Video
+									id={subscriber.id}
+									muted={false}
+									style={customStyles.video}
+									stream={subscriber.stream}
+								/>
+							</div>
+						);
 
 					}}
 					renderLocalStream={(publisher:any) => {
 
-						return null;
+						const customStyles = this.getCustomStyles(1);
+
+						return (
+							<div style={customStyles.localVideoContainer}>
+								<Video
+									id={publisher.id}
+									muted={true}
+									style={customStyles.localVideo}
+									stream={publisher.stream}
+								/>
+							</div>
+						);
 
 					}}
-					*/
 				/>
 			</div>
 		</div>
