@@ -1,12 +1,11 @@
 import './assets/styles.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-const moment = require('moment');
-import { v1 as uuidv1 } from 'uuid';
-import { useState, useRef, Component } from 'react';
+import { Component } from 'react';
 import { Consola, BrowserReporter } from 'consola';
-import { JanusVideoRoom } from './react-janus-videoroom/react-janus-videoroom'; //'react-videoroom-janus'; //
+import { JanusVideoRoom } from 'react-videoroom-janus';
 import Select from 'react-select';
+const moment = require('moment');
 
 
 
@@ -25,7 +24,7 @@ const styles = {
 			position: `absolute`,
 			top: `50px`,
 			right: `50px`
-		},
+		}
 	},
 	'1': {
 		container:{
@@ -521,6 +520,7 @@ class App extends Component<AppProps,AppState> {
 						return customStyles;
 
 					}}
+					/*
 					renderContainer={(children:any) => {
 
 						const customStyles = this.getCustomStyles(1);
@@ -567,6 +567,7 @@ class App extends Component<AppProps,AppState> {
 						);
 
 					}}
+					*/
 				/>
 			</div>
 		</div>

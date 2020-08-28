@@ -6072,10 +6072,12 @@ react-transition-group@^4.3.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-videoroom-janus@^0.0.51:
-  version "0.0.51"
-  resolved "https://registry.yarnpkg.com/react-videoroom-janus/-/react-videoroom-janus-0.0.51.tgz#2b8935e8f9fd13be62d1af7a941e1cac45638e8f"
-  integrity sha512-IbQpee4NO/m5fYpTWjC5yYLWvqIMYTzOWO/7+9Y6tqy+dg+8ThbZfRT7ZWxdj+Z24ErorIbRVsfLruYVbXVr5Q==
+react-videoroom-janus@^0.0.54:
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/react-videoroom-janus/-/react-videoroom-janus-0.0.54.tgz#0c2377098f1972f753811ce1a093ec922c149921"
+  integrity sha512-cOsBrRolYaez9RFE0Ik3Lwtbf6HZbkm98eR5iTx/t0cCrAeEh7QxlZRNPUotQ3PMIVhxZ+0fXsqSSaMQLX5FEg==
+  dependencies:
+    rxjs "^6.6.2"
 
 react@^16.4.0:
   version "16.13.1"
@@ -6429,6 +6431,13 @@ run-queue@^1.0.0, run-queue@^1.0.3:
   integrity sha1-6Eg5bwV9Ij8kOGkkYY4laUFh7Ec=
   dependencies:
     aproba "^1.1.1"
+
+rxjs@^6.6.2:
+  version "6.6.2"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.6.2.tgz#8096a7ac03f2cc4fe5860ef6e572810d9e01c0d2"
+  integrity sha512-BHdBMVoWC2sL26w//BCu3YzKT4s2jip/WhwsGEDmeKYBhKDZeYezVUnHatYB7L85v5xs0BAQmg6BEYJEKxBabg==
+  dependencies:
+    tslib "^1.9.0"
 
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"
