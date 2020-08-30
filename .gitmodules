@@ -2,6 +2,6 @@
 	path = janus-gateway-client
 	url = https://github.com/IG-88-2/janus-gateway-client
 	branch = master
-[submodule "react-janus-videoroom"]
-	path = react-janus-videoroom
-	url = https://github.com/IG-88-2/react-janus-videoroom
+[submodule "react-videoroom-janus"]
+	path = react-videoroom-janus
+	url = https://github.com/IG-88-2/react-videoroom-janus

@@ -496,12 +496,12 @@ class App extends Component<AppProps,AppState> {
 				height:`100%`
 			}}>
 				<JanusVideoRoom
-					logger={logger}
+					//logger={logger}
 					server={this.props.server}
 					room={this.state.selectedRoom}
 					onPublisherDisconnected={this.onPublisherDisconnected}
-					rtcConfiguration={this.rtcConfiguration}
-					cameraId={this.state.cameraId}
+					//rtcConfiguration={this.rtcConfiguration}
+					//cameraId={this.state.cameraId}
 					user_id={this.props.user_id}
 					onConnected={this.onConnected}
 					onDisconnected={this.onDisconnected}
@@ -509,17 +509,17 @@ class App extends Component<AppProps,AppState> {
 					onError={this.onError}
 					onParticipantJoined={this.onParticipantJoined}
 					onParticipantLeft={this.onParticipantLeft}
-					mediaConstraints={{
-						video: true,
-						audio: true
-					}}
-					getCustomStyles={(n:number) => {
+					//mediaConstraints={{
+					//	video: true,
+					//	audio: true
+					//}}
+					//getCustomStyles={(n:number) => {
 
-						const customStyles = this.getCustomStyles(n);
+					//	const customStyles = this.getCustomStyles(n);
 
-						return customStyles;
+					//	return customStyles;
 
-					}}
+					//}}
 					/*
 					renderContainer={(children:any) => {
 
@@ -596,7 +596,7 @@ logger.info(`params - ${user_id} ${host} ${port}`);
 
 const url = `127.0.0.1`; //`3.121.126.200`; //host; //
 
-const server = `ws://${url}:8080/?id=${user_id}`; //`ws://${host}:${port}/?id=${user_id}`;
+const server = `ws://${url}:8080`; //`ws://${url}:8080/?id=${user_id}`; //`ws://${host}:${port}/?id=${user_id}`;
 
 ReactDOM.render(<App server={server} user_id={user_id} />, app);
 //http://localhost:3000?search&user_id=12&host=127.0.0.1&port=8080

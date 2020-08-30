@@ -6072,10 +6072,10 @@ react-transition-group@^4.3.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-videoroom-janus@^0.0.61:
-  version "0.0.61"
-  resolved "https://registry.yarnpkg.com/react-videoroom-janus/-/react-videoroom-janus-0.0.61.tgz#1fdbd1291e676f00ac466128f83d775deade40f9"
-  integrity sha512-Pk/NzGpLgOvcyFzEu8iU9CpKeCLB2+Sr8IZoH4hz4gkX8W9A5fSHTsNtPsLOy15uajc0emuQTFzRnNAf8taTVA==
+react-videoroom-janus@^0.0.63:
+  version "0.0.63"
+  resolved "https://registry.yarnpkg.com/react-videoroom-janus/-/react-videoroom-janus-0.0.63.tgz#f8eec690bc3c6b299985c446051d73fc20850805"
+  integrity sha512-QbXAjxaMZ0ntgY8nhPIdxiCLX256tCSPElvenR+XVzd09XdIv8/kR08SnyIHL3FKzJw2iCGwQwexDaRosDRM8A==
 
 react@^16.4.0:
   version "16.13.1"
