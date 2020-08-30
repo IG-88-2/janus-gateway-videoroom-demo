@@ -4,6 +4,7 @@ import * as ReactDOM from 'react-dom';
 import { Component } from 'react';
 import { Consola, BrowserReporter } from 'consola';
 import { JanusVideoRoom } from 'react-videoroom-janus';
+import { v1 as uuidv1 } from 'uuid';
 import Select from 'react-select';
 const moment = require('moment');
 
@@ -586,18 +587,13 @@ document.body.appendChild(app);
 
 const params = new URLSearchParams(window.location.href);
 
-const user_id = params.get(`user_id`); //'12'
+let user_id = params.get(`user_id`);
 
-const host = params.get(`host`);
+if (!user_id) {
+	user_id = uuidv1();
+}
 
-const port = params.get(`port`);
-
-logger.info(`params - ${user_id} ${host} ${port}`);
-
-const url = `18.158.159.40`; //`127.0.0.1`; //`3.121.126.200`; //host; //
-
-const server = `wss://kreiadesign.com`; //`ws://${url}:8080`; //`ws://${url}:8080/?id=${user_id}`; //`ws://${host}:${port}/?id=${user_id}`;
+const server = `wss://kreiadesign.com`; //`ws://127.0.0.1:8080`;
 
 ReactDOM.render(<App server={server} user_id={user_id} />, app);
-//http://localhost:3000?search&user_id=12&host=127.0.0.1&port=8080
-//http://localhost:3000?search&user_id=12&host=ec2-3-121-126-200.eu-central-1.compute.amazonaws.com&port=8080
+//http://localhost:3000?search&user_id=12
