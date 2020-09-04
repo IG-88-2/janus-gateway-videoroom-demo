@@ -593,6 +593,6 @@ if (!user_id) {
 	user_id = uuidv1();
 }
 
-const server = `ws://127.0.0.1:8080`; //`wss://kreiadesign.com`;
+const server = `wss://kreiadesign.com`; //`ws://127.0.0.1:8080`;
 
 ReactDOM.render(<App server={server} user_id={user_id} />, app);
