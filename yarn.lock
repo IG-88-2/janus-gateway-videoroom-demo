@@ -4759,10 +4759,10 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
-janus-gateway-client@^0.0.53:
-  version "0.0.53"
-  resolved "https://registry.yarnpkg.com/janus-gateway-client/-/janus-gateway-client-0.0.53.tgz#6e6b5d7f72f778130c1ea959534f2666d6066bb5"
-  integrity sha512-rLRfZVpIpMmlMNkQ6VhEFIS5BcL09ibsJql9JkpshZEWqYI1/ZFSHetyNprzP86m2R9iI7JriM93Scn/p/hxOA==
+janus-gateway-client@^0.0.57:
+  version "0.0.57"
+  resolved "https://registry.yarnpkg.com/janus-gateway-client/-/janus-gateway-client-0.0.57.tgz#9383386fa36ae60ec4670368fcd8e068a238407c"
+  integrity sha512-rk4KbYjDzk0TSWHtPZh6KqxQaEgOgXFvn2DE/GIVYoXHN5bPzFi65cn34qQ32lz/dF1dUfaYz78Ago2IzMaLVw==
   dependencies:
     "@babel/polyfill" "^7.10.4"
 
@@ -6072,10 +6072,10 @@ react-transition-group@^4.3.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-videoroom-janus@^0.0.65:
-  version "0.0.65"
-  resolved "https://registry.yarnpkg.com/react-videoroom-janus/-/react-videoroom-janus-0.0.65.tgz#0d16eec4a6bba9ce875b6f46c8f12e09f62a1041"
-  integrity sha512-TexDpHuqxZlIXpaT7cg8U9H34LfRvCmBmBtEMyWyI9sPrQqyrbpnaHE79+hVoltRtjYU/7kOM+xsN/miLhwMdg==
+react-videoroom-janus@^0.0.69:
+  version "0.0.69"
+  resolved "https://registry.yarnpkg.com/react-videoroom-janus/-/react-videoroom-janus-0.0.69.tgz#96614429d41a3d5e269cdb8a989ffe60d017284e"
+  integrity sha512-Mptu47EY0lsbENDtA8X9YfMhAs6p8tfzAuvNpqFC7KeaOZ0WQwsF8qWsSIQjYMY5OKUSKZGtIYm1daYExSFaYA==
 
 react@^16.4.0:
   version "16.13.1"
