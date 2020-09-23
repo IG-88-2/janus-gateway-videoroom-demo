@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Component } from 'react';
 import { Consola, BrowserReporter } from 'consola';
-import { JanusVideoRoom } from './react-videoroom-janus/react-videoroom-janus';
+import { JanusVideoRoom } from 'react-videoroom-janus'; //'./react-videoroom-janus/react-videoroom-janus';
 import { v1 as uuidv1 } from 'uuid';
 import Select from 'react-select';
 const moment = require('moment');
