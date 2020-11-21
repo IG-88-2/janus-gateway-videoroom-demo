@@ -849,14 +849,6 @@
     "@babel/helper-create-regexp-features-plugin" "^7.10.4"
     "@babel/helper-plugin-utils" "^7.10.4"
 
-"@babel/polyfill@^7.10.4":
-  version "7.10.4"
-  resolved "https://registry.yarnpkg.com/@babel/polyfill/-/polyfill-7.10.4.tgz#915e5bfe61490ac0199008e35ca9d7d151a8e45a"
-  integrity sha512-8BYcnVqQ5kMD2HXoHInBH7H1b/uP3KdnwCYXOqFnXqguOyuu443WXusbIUbWEfY3Z0Txk0M1uG/8YuAMhNl6zg==
-  dependencies:
-    core-js "^2.6.5"
-    regenerator-runtime "^0.13.4"
-
 "@babel/preset-env@^7.1.0", "@babel/preset-env@^7.7.6":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/preset-env/-/preset-env-7.10.4.tgz#fbf57f9a803afd97f4f32e4f798bb62e4b2bef5f"
@@ -3061,7 +3053,7 @@ core-js-compat@^3.6.2:
     browserslist "^4.8.5"
     semver "7.0.0"
 
-core-js@^2.4.0, core-js@^2.5.0, core-js@^2.6.5:
+core-js@^2.4.0, core-js@^2.5.0:
   version "2.6.11"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
@@ -4759,13 +4751,6 @@ isobject@^3.0.0, isobject@^3.0.1:
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
 
-janus-gateway-client@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/janus-gateway-client/-/janus-gateway-client-0.0.6.tgz#e0819fb1d8346d0f489de46d45219e8d13ec018c"
-  integrity sha512-cfTfJ/ZPwoHuTmaHcHD+OUerwDeyR8bs5eHDYApD5OhOG3oK2NGWPoGiUSjqqFo/t34YE3wyjqjOzCmDIZe5qg==
-  dependencies:
-    "@babel/polyfill" "^7.10.4"
-
 js-tokens@^3.0.0, js-tokens@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
@@ -6072,10 +6057,10 @@ react-transition-group@^4.3.0:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-react-videoroom-janus@^0.0.71:
-  version "0.0.71"
-  resolved "https://registry.yarnpkg.com/react-videoroom-janus/-/react-videoroom-janus-0.0.71.tgz#879ebc0dff85b34d96677299e0642ce615ba2279"
-  integrity sha512-pSQnmiUp+sdonkQfrWtKOhOipSRmQvIjiO5Omg0tdJjLqAf4VJvGvhxEny66q5je0SKAeP0Ly7/myUKNDhkttA==
+react-videoroom-janus@^0.0.72:
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/react-videoroom-janus/-/react-videoroom-janus-0.0.72.tgz#1f4e3ee34b5641f00fba80e447bc1b2167d80231"
+  integrity sha512-jGBGSw2pk4CE8AHZM45CBdb5WxJZCMiNNnBtRytj+WSISpc66MW5HXt9gCdixfCBcpUjDOHAY6LMBfr4XuccIQ==
 
 react@^16.4.0:
   version "16.13.1"

@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Component } from 'react';
 import { Consola, BrowserReporter } from 'consola';
-import { JanusVideoRoom } from 'react-videoroom-janus'; //'./react-videoroom-janus/react-videoroom-janus';
+import { JanusVideoRoom } from 'react-videoroom-janus';
 import { v1 as uuidv1 } from 'uuid';
 import Select from 'react-select';
 const moment = require('moment');
@@ -593,6 +593,6 @@ if (!user_id) {
 	user_id = uuidv1();
 }
 
-const server = `wss://dev-janus.blipiq.com`; //`wss://kreiadesign.com`; //`ws://127.0.0.1:8080`;
+const server = `wss://kreiadesign.com`; //`ws://127.0.0.1:8080`;
 
 ReactDOM.render(<App server={server} user_id={user_id} />, app);
