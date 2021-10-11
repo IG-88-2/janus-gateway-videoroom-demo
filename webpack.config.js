@@ -4,17 +4,21 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 
 
-module.exports = env => {
+module.exports = (env, data) => {
 
+  console.log(env);
+
+  const { mode, server } = env;
+  
   return {
-    mode: env,
-    devtool: env==="development" ? "eval" : "none",
+    mode,
+    devtool: "eval",
     entry: {    
       "app" : "./app.tsx"
     },
     output: {            
       filename: "[name].js",
-      path: path.resolve(__dirname,env) 
+      path: path.resolve(__dirname, mode) 
     },     
     resolve: { 
       extensions: [".ts", ".tsx", ".js", ".json", ".css"]
@@ -73,17 +77,20 @@ module.exports = env => {
     },
     target: "web",
     plugins: [
-      new CopyWebpackPlugin([
-        {
-          from:"./index.html",
-          to:"./index.html"
-        },
-        {
-          from:"./assets"
-        }
-      ]),
+      new CopyWebpackPlugin({
+        patterns:[
+          {
+            from:"./index.html",
+            to:"./index.html"
+          },
+          {
+            from:"./assets"
+          }
+        ]
+      }),
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(env)
+        'process.env.NODE_ENV': JSON.stringify(mode),
+        'process.env.server': JSON.stringify(server)
       })
     ]
   }
