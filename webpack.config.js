@@ -27,7 +27,7 @@ module.exports = (env, data) => {
       minimize: false
     },
     devServer: {
-      port: 3000,
+      port: 9000,
       hot: true
     },
     module: {

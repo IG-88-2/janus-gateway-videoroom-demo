@@ -7,7 +7,7 @@
   "main": "./production/main.js",
   "repository": "",
   "scripts": {
-    "development:server": "node --max_old_space_size=4096 ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --env mode=development server=ws://127.0.0.1:8080 --config webpack.config.js",
+    "dev": "node --max_old_space_size=4096 ./node_modules/webpack-dev-server/bin/webpack-dev-server.js --env mode=development server=ws://127.0.0.1:8080 --config webpack.config.js",
     "build": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js -w --env mode=development server=ws://127.0.0.1:8080 --config webpack.config.js",
     "ec2": "node --max_old_space_size=4096 ./node_modules/webpack/bin/webpack.js -w --env mode=development server=wss://kreiadesign.com --config webpack.config.js"
   },
@@ -60,5 +60,11 @@
     "webpack-cli": "^4.9.0",
     "webpack-dev-server": "^4.3.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
+    "@mui/icons-material": "^5.0.3",
+    "@mui/material": "^5.0.3",
+    "react-rnd": "^10.3.5"
+  }
 }

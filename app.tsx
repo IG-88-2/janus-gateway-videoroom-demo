@@ -2,269 +2,18 @@ import './assets/styles.css';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Component } from 'react';
-import { Consola, BrowserReporter } from 'consola';
-import { JanusVideoRoom } from 'react-videoroom-janus';
+import { JanusVideoRoom } from './react-videoroom-janus/dist';
 import { v1 as uuidv1 } from 'uuid';
 import Select from 'react-select';
-const moment = require('moment');
-
-
-
-const styles = {
-	'0': {
-		container:{
-			height: `100%`,
-			width: `100%`,
-			position: `relative`
-		},
-		localVideo:{
-			width: `200px`,
-			height: `auto`
-		},
-		localVideoContainer:{
-			position: `absolute`,
-			top: `50px`,
-			right: `50px`
-		}
-	},
-	'1': {
-		container:{
-			height: `100%`,
-			width: `100%`,
-			position: `relative`
-		},
-		video:{
-			width: `100%`,
-		},
-		videoContainer:{
-			width: `100%`,
-			height: `100%`
-		},
-		localVideo:{
-			width: `200px`,
-			height: `auto`
-		},
-		localVideoContainer:{
-			position: `absolute`,
-			top: `50px`,
-			right: `50px`
-		}
-	},
-	'2': {
-		container:{
-			height: `100%`,
-			width: `100%`,
-			display: `flex`,
-			position: `relative`
-		},
-		video:{
-			width: `100%`,
-			height: `100%`,
-			objectFit: `cover`
-		},
-		videoContainer:{
-			width: `100%`,
-			height: `100%`
-		},
-		localVideo:{
-			width: `200px`,
-			height: `auto`
-		},
-		localVideoContainer:{
-			position: `absolute`,
-    		right: `calc(50% - 100px)`
-		}
-	},
-	'3': {
-		container:{
-			display: `grid`,
-			gridTemplateColumns: `50% 50%`
-		},
-		video:{
-			width: `100%`,
-			height: `100%`,
-			objectFit: `cover`
-		},
-		localVideo:{
-			height: `100%`
-		},
-		localVideoContainer:{
-			
-		}
-	},
-	'4': {
-		container:{
-			display: `grid`,
-			gridTemplateColumns: `50% 50%`,
-			gridTemplateRows: `50% 50%`,
-    		height: `100%`
-		},
-		video:{
-			width: `100%`,
-			height: `100%`,
-			objectFit: `cover`
-		},
-		localVideo:{
-			height: `100%`,
-		},
-		localVideoContainer:{
-		    position: `absolute`,
-			top: `calc(50% - 80px)`,
-			left: `calc(50% + 70px)`,
-			borderRadius: `200px`,
-			overflow: `hidden`,
-			width: `160px`,
-			height: `160px`
-		}
-	},
-	'5': {
-		container:{
-			display: `grid`,
-			gridTemplateColumns: `33.3% 33.3% 33.3%`,
-			gridTemplateRows: `50% 50%`,
-    		height: `100%`
-		},
-		video:{
-			width: `100%`,
-			height: `100%`,
-			objectFit: `cover`
-		},
-		localVideo:{
-			height: `100%`
-		},
-		localVideoContainer:{
-			
-		}
-	}
-};
-
-
-
-interface VideoProps {
-	id:string,
-	muted:boolean,
-	style:any,
-	stream:any
-}
-
-
-
-interface VideoState {
-
-}
-
-
-
-class Video extends Component<VideoProps,VideoState> {
-	video:any
-	container:any 
-
-	constructor(props) {
-
-		super(props);
-		
-	}
-	
-
-
-	componentDidMount() {
-		
-		this.video.srcObject = this.props.stream;
-	
-		this.video.play();
-
-	}
-
-
-
-	componentWillReceiveProps(nextProps) {
-		
-		if (nextProps.stream!==this.props.stream) {
-			this.video.srcObject = nextProps.stream;
-			this.video.play();
-		}
-
-	}
-
-
-
-	render () {
-
-		const {
-			id,
-			muted,
-			style
-		} = this.props;
-
-		return <video
-			id={`video-${id}`}
-			muted={muted}
-			style={style}
-			ref={(video) => { 
-				this.video = video; 
-			}}
-		/>
-		
-	}
-
-}
-
-
-
-let enabled = true;
-
-
-
-const log : any = new Consola({
-    level: 3, 
-    reporters: [
-      new BrowserReporter()
-    ]
-});
-
-
-
-const getDatePrefix = () => {
-
-    const date = moment().format('H:mm:ss:SSS');
-
-    return date;
-
-};
-
-
-
-const logger = {
-    success: (...args) => {
-
-        if (enabled) {
-            log.success(getDatePrefix(), ...args);
-        }
-
-    },
-    info: (...args) => {
-
-        if (enabled) {
-            log.info(getDatePrefix(), ...args);
-        }
-
-    },
-    error: (error:any) => {
-
-        if (enabled) {
-            log.error(error);
-        }
-
-    },
-    json: (...args) => {
-
-        if (enabled) {
-            log.info(`JSON`, getDatePrefix(), ...args);
-        }
-
-    }
-};
-
+import { logger } from './utils/logger';
+import { Video } from './components/Video';
+import { VideoRoomContainer } from './components/VideoRoomContainer';
+import { IconButton } from '@mui/material';
+import CallEndIcon from '@mui/icons-material/CallEnd';
+import MicIcon from '@mui/icons-material/Mic';
+import MicOffIcon from '@mui/icons-material/MicOff';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 
 
 interface AppProps {
@@ -273,29 +22,27 @@ interface AppProps {
 }
 
 
-
 interface AppState {
 	selectedRoom: any,
 	cameras: any[],
 	rooms: any[],
-	cameraId: string
+	cameraId: string,
+	pause: boolean,
+	mute: boolean,
+	participants: number,
+	width: number,
+	height: number,
+	x: number,
+	y: number
 }
-
 
 
 class App extends Component<AppProps,AppState> {
 	rtcConfiguration:any
-
+	
 	constructor(props) {
 		
 		super(props);
-
-		this.state = {
-			selectedRoom: null,
-			cameras: [],
-			rooms: [],
-			cameraId: null
-		};
 
 		this.rtcConfiguration = {
 			"iceServers": [{
@@ -303,7 +50,21 @@ class App extends Component<AppProps,AppState> {
 			}],
 			"sdpSemantics": "unified-plan"
 		};
-		
+
+		this.state = {
+			selectedRoom: null,
+			cameras: [],
+			rooms: [],
+			cameraId: null,
+			pause: false,
+			mute: false,
+			participants: 0,
+			width: 425,
+			height: 300,
+			x: 300,
+			y: -400
+		};
+
 	}
 
 
@@ -314,11 +75,11 @@ class App extends Component<AppProps,AppState> {
 		.then((cameras) => {
 			
 			this.setState({
-				cameras:cameras.map(({ deviceId, label }) => {
+				cameras:cameras.map(({ deviceId, label, groupId }) => {
 
 					return {
-						label,
-						value:deviceId
+						label: label.length==0 ? "Unknown Device" : label,
+						value: deviceId.length==0 ?  groupId : deviceId
 					}
 
 				})
@@ -328,17 +89,6 @@ class App extends Component<AppProps,AppState> {
 
 	}
 
-
-	getCustomStyles = (nParticipants) => {
-		
-		const key = String(nParticipants);
-
-		const s = styles[key];
-
-		return s || {};
-
-	}
-	
 
 
 	selectRoom = (room_id) => {
@@ -405,6 +155,10 @@ class App extends Component<AppProps,AppState> {
 		
 		logger.info('onParticipantJoined', participant);
 
+		this.setState({
+			participants: this.state.participants + 1
+		});
+
 	}
 
 
@@ -412,6 +166,10 @@ class App extends Component<AppProps,AppState> {
 	onParticipantLeft = (participant:any) => {
 		
 		logger.info('onParticipantLeft', participant);
+
+		this.setState({
+			participants: this.state.participants - 1
+		});
 
 	}
 
@@ -429,16 +187,157 @@ class App extends Component<AppProps,AppState> {
 
 
 
+	renderContainer = (children:any) => {
+		
+		return (
+			<div style={{
+				width: `100%`,
+				height: `calc(100% - 30px)`,
+				overflow: `hidden`,
+				display: `flex`,
+				background: `rgba(40, 40, 40, 0.5)`,
+				flexWrap: `wrap`,
+				alignItems: `center`,
+				justifyContent: `center`
+			}}>
+				{children}
+			</div>
+		);
+		
+	}
+
+
+
+	renderStream = (subscriber:any) => {
+
+		const { 
+			width, 
+			height 
+		} = this.state;
+
+		const participants = document.getElementsByTagName("video").length;
+		const area = width * height;
+		const p = participants == 0 ? 1 : participants;
+		
+		let s : any = {
+			display:`flex`,
+			flex:`0 1 0%`,
+			background:`aliceblue`,
+			position:`relative`,
+			minWidth:`${Math.sqrt(area / p) * 0.9}px`
+		};
+		
+		if (participants == 2) {
+			s = {
+				display:`flex`,
+				height:`100%`,
+				position:`relative`,
+				background:`aliceblue`,
+				width:`100%`
+			};
+		}
+
+		return (
+			<div 
+				key={`subscriber-${subscriber.id}`}
+				style={s}
+			>
+				<Video
+					id={subscriber.id}
+					muted={false}
+					style={{
+						width:`100%`,
+						height:`100%`,
+						objectFit:`contain`,
+						zIndex: 5000
+					}}
+					stream={subscriber.stream}
+				/>
+				<div style={{
+					pointerEvents:`none`,
+					width: `100%`,
+					height: `100%`,
+					position: `absolute`,
+					textAlign: `center`,
+					color: `darkgreen`,
+					background: `aliceblue`,
+					display: `flex`,
+					fontSize: `1.2vw`,
+					alignItems: `center`,
+					justifyContent: `center`,
+					overflow: 'hidden',
+					zIndex: 100
+				}}>
+					User gesture required
+				</div>
+			</div>
+		);
+
+	}
+
+
+
+    LocalVideo = ({ publisher }) => (
+        
+        ReactDOM.createPortal(
+            <div style={{
+                pointerEvents:"none",
+                position:"fixed",
+                top:0,
+                left:0,
+                display:"flex",
+                height:`100%`,
+                minHeight:`100%`,
+                width:"100%",
+                zIndex:99999,
+                overflow:"hidden"
+            }}> 
+                <div style={{
+					width: `100px`,
+					height: `100px`,
+					position: `absolute`,
+					bottom: 0,
+					right: 0,
+					background: `black`
+				}}>
+					<Video
+						id={publisher.id}
+						muted={true}
+						style={{
+							width:`100%`,
+							height:`100%`,
+							objectFit:`cover`
+						}}
+						stream={publisher.stream}
+					/>
+				</div>
+            </div>,
+            document.body
+        )
+
+    )
+    
+
+	
+	renderLocalStream = (publisher:any) => {
+					
+		return <this.LocalVideo publisher={publisher} />
+
+	}
+
+
+
 	render() {
 		
-		return <div style={{
-			height:`100%`,
-			width:`100%`,
-			display:`flex`
-		}}>
+		return <div
+			style={{
+				height:`100%`,
+				width:`100%`
+			}}
+		>
 			<div style={{
 				width:`300px`,
-				height:`calc(100% - 50px)`
+				height:`100%`
 			}}>
 				<div style={{
 					display:`flex`,
@@ -454,6 +353,7 @@ class App extends Component<AppProps,AppState> {
 					}}>
 						<Select
 							options={this.state.cameras}
+							placeholder={"Select device..."}
 							onChange={(r) => {
 								
 								this.setState({
@@ -496,80 +396,90 @@ class App extends Component<AppProps,AppState> {
 				flex:1,
 				height:`100%`
 			}}>
-				<JanusVideoRoom
-					logger={logger}
-					server={this.props.server}
-					room={this.state.selectedRoom}
-					onPublisherDisconnected={this.onPublisherDisconnected}
-					rtcConfiguration={this.rtcConfiguration}
-					cameraId={this.state.cameraId}
-					user_id={this.props.user_id}
-					onConnected={this.onConnected}
-					onDisconnected={this.onDisconnected}
-					onRooms={this.onRooms}
-					onError={this.onError}
-					onParticipantJoined={this.onParticipantJoined}
-					onParticipantLeft={this.onParticipantLeft}
-					mediaConstraints={{
-						video: true,
-						audio: true
+				<VideoRoomContainer
+					onDrag={(x:number, y:number) => {
+						this.setState({ x, y });
 					}}
-					getCustomStyles={(n:number) => {
-
-						const customStyles = this.getCustomStyles(n);
-
-						return customStyles;
-
+					onResize={(width:number, height:number) => {
+						this.setState({ width, height });
 					}}
-					/*
-					renderContainer={(children:any) => {
-
-						const customStyles = this.getCustomStyles(1);
-						
-						return (
-							<div style={customStyles.container}>
-								{children}
-							</div>
-						);
-						
-					}}
-					renderStream={(subscriber:any) => {
-
-						const customStyles = this.getCustomStyles(1);
-
-						return (
-							<div 
-								key={`subscriber-${subscriber.id}`}
-								style={customStyles.videoContainer}
-							>
-								<Video
-									id={subscriber.id}
-									muted={false}
-									style={customStyles.video}
-									stream={subscriber.stream}
-								/>
-							</div>
-						);
-
-					}}
-					renderLocalStream={(publisher:any) => {
-
-						const customStyles = this.getCustomStyles(1);
-
-						return (
-							<div style={customStyles.localVideoContainer}>
-								<Video
-									id={publisher.id}
-									muted={true}
-									style={customStyles.localVideo}
-									stream={publisher.stream}
-								/>
-							</div>
-						);
-
-					}}
-					*/
-				/>
+					width={this.state.width}
+					height={this.state.height}
+					x={this.state.x}
+					y={this.state.y}
+				>
+					<JanusVideoRoom
+						pause={this.state.pause}
+						mute={this.state.mute}
+						logger={logger}
+						server={this.props.server}
+						room={this.state.selectedRoom}
+						onPublisherDisconnected={this.onPublisherDisconnected}
+						rtcConfiguration={this.rtcConfiguration}
+						cameraId={this.state.cameraId}
+						user_id={this.props.user_id}
+						onConnected={this.onConnected}
+						onDisconnected={this.onDisconnected}
+						onRooms={this.onRooms}
+						onError={this.onError}
+						onParticipantJoined={this.onParticipantJoined}
+						onParticipantLeft={this.onParticipantLeft}
+						mediaConstraints={{
+							video: true,
+							audio: true
+						}}
+						renderContainer={this.renderContainer}
+						renderStream={this.renderStream}
+						renderLocalStream={this.renderLocalStream}
+					/>
+					<div style={{
+						display: `flex`,
+						flexDirection: `row`,
+						height: `30px`,
+						alignItems: `center`,
+						justifyContent: `space-evenly`,
+						background: `rgba(100,120,120,0.2)`
+					}}>
+						<IconButton 
+							aria-label="toggle-mic"
+							onClick={(e) => {
+								this.setState({
+									mute: !this.state.mute
+								});
+							}}
+						>
+							{
+								!this.state.mute ?
+								<MicIcon /> :
+								<MicOffIcon />
+							}
+						</IconButton>
+						<IconButton 
+							aria-label="toggle-video"
+							onClick={(e) => {
+								this.setState({
+									pause: !this.state.pause
+								});
+							}}
+						>
+							{
+								!this.state.pause ?
+								<VideocamIcon /> :
+								<VideocamOffIcon />
+							}
+						</IconButton>
+						<IconButton 
+							aria-label="end-call"
+							onClick={(e) => {
+								this.setState({
+									selectedRoom: null
+								});
+							}}
+						>
+							<CallEndIcon />
+						</IconButton>
+					</div>
+				</VideoRoomContainer>
 			</div>
 		</div>
 	
@@ -579,15 +489,17 @@ class App extends Component<AppProps,AppState> {
 
 const app = document.getElementById('application');
 
-app.style.width = `calc(100vw - 20px)`;
+app.style.width = `100%`;
 
-app.style.height = `calc(100vh - 20px)`;
+app.style.height = `100%`;
 
 document.body.appendChild(app);
 
 const params = new URLSearchParams(window.location.href);
 
 let user_id = params.get(`user_id`);
+
+console.log('user_id is', user_id);
 
 if (!user_id) {
 	user_id = uuidv1();
